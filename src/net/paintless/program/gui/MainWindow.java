@@ -15,22 +15,52 @@ public class MainWindow extends Application{
 		launch(MainWindow.class);
 	}
 	
-	Button button;
-	
-	public MainWindow(){
-		
-	}
+	Stage	window;
+	Scene	mainScene,configScene;
 	
 	@Override
-	public void start(Stage main) throws Exception{
-		main.setTitle("your");
-		button=new Button("mum");
+	public void start(Stage win) throws Exception{
+		window=win;
+		
+		window.setTitle("Paintless");
+		
+		initMainScene();
+		initConfigScene();
+		
+		window.setScene(mainScene);
+		
+		window.show();
+		
+		LogUtil.println(System.currentTimeMillis()-Paintless.start);
+	}
+	
+	private void initMainScene(){
+		Button button=new Button("open config");
+		
+		button.setOnAction(e->{
+			window.setScene(configScene);
+			LogUtil.println(e);
+		});
+		
 		StackPane layout=new StackPane();
 		layout.getChildren().add(button);
-		Scene scene=new Scene(layout, 600, 400);
-		main.setScene(scene);
-		main.show();
-		LogUtil.println(System.currentTimeMillis()-Paintless.start);
+		
+		mainScene=new Scene(layout, 600, 400);
+		
+	}
+	private void initConfigScene(){
+		Button button=new Button("open main");
+		
+		button.setOnAction(e->{
+			window.setScene(mainScene);
+			LogUtil.println(e);
+		});
+		
+		StackPane layout=new StackPane();
+		layout.getChildren().add(button);
+		
+		configScene=new Scene(layout, 600, 400);
+		
 	}
 	
 }
