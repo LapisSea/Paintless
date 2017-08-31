@@ -1,10 +1,13 @@
 package net.paintless.program.gui;
 
+import com.lapissea.util.LogUtil;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import net.paintless.Paintless;
 
 public class MainWindow extends Application{
 	
@@ -27,6 +30,7 @@ public class MainWindow extends Application{
 		Scene scene=new Scene(layout, 600, 400);
 		main.setScene(scene);
 		main.show();
+		LogUtil.println(System.currentTimeMillis()-Paintless.start);
 	}
 	
 }

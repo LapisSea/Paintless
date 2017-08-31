@@ -1,4 +1,4 @@
-package net.paintless.launch;
+package net.paintless;
 
 import com.lapissea.util.LogUtil;
 
