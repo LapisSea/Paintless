@@ -1,22 +1,37 @@
 <div id="HomeGui" class="gui">
 	<style>
 		#HomeGui{
-			display: flex;
-			justify-content: center;
-			align-items: center;
 			background: #F0F0F0;
 			overflow: auto;
+			vertical-align: middle;
+			display: flex;
 			/* position: absolute; */
 		}
 		#Editor{
 			transition: width 0.1s, height 0.1s, min-width 0.1s, min-height 0.1s;
 			background-attachment: scroll;
 		}
+		#EditorCenter{
+			/* padding: 5%; */
+			display: table-cell;
+			text-align: center;
+			vertical-align: middle;
+			margin: auto;
+			user-select: none;
+		}
 	</style>
-	<div style="padding: 5%">
-		<div class="ImageView">
-			<canvas width=600 height=400 id="Editor" onkeydown="console.log(window.event)"></canvas>
-		</div>
+	<div style="display: table;width: 100%;height: 100%;">
+			<div id="EditorCenter">
+				<div style="
+				vertical-align: middle;
+				display: inline-block;
+				text-align: left;
+				padding: 5%;">
+				<div class="ImageView">
+					<canvas width=600 height=400 id="Editor" onkeydown="console.log(window.event)"></canvas>
+				</div>
+				</div>
+			</div>
 	</div>
 	<script>
 		homeGui=document.currentScript.parentNode;
@@ -34,23 +49,23 @@
 			ctx=homeGui.editor.getContext("2d");
 			var distX=x-lastToolX;
 			var distY=y-lastToolY;
-			var dist=Math.sqrt(distX*distX+distY*distY);
-			console.log(dist)
-			var brushSize=3;
+			// var dist=Math.sqrt(distX*distX+distY*distY);
+			var brushSize=20;
+			var angle=Math.atan2(-distX,distY);
 
 			ctx.strokeStyle="black";
 			ctx.fillStyle="black";
 
-			ctx.beginPath();
-			ctx.moveTo(lastToolX, lastToolY);
-			ctx.lineTo(x, y);
-			ctx.lineWidth = brushSize;
-			ctx.stroke();
-			ctx.closePath();
+			// ctx.beginPath();
+			// ctx.moveTo(lastToolX, lastToolY);
+			// ctx.lineTo(x, y);
+			// ctx.lineWidth = brushSize;
+			// ctx.stroke();
+			// ctx.closePath();
 			
 			ctx.beginPath();
-			ctx.arc(x,y,brushSize/2,0,2*Math.PI);
-			ctx.arc(lastToolX,lastToolY,brushSize/2,0,2*Math.PI);
+			ctx.arc(x,y,brushSize/2,angle,Math.PI+angle);
+			ctx.arc(lastToolX,lastToolY,brushSize/2,Math.PI+angle,angle);
 			ctx.fill();
 		};
 
@@ -61,7 +76,6 @@
 			lastToolX=(clientX-rect.left)/this.actualScale;
 			lastToolY=(clientY-rect.top)/this.actualScale;
 			tool(lastToolX,lastToolY);
-			// console.log(e)
 		}
 		homeGui.onmouseup=function(e){
 			this.mouseDown=false;
@@ -101,7 +115,8 @@
 			e.width=image.width;
 			e.height=image.height;
 			e.getContext("2d").drawImage(image,0,0);
-			this.onmousewheel();
+			this.scal=500;
+			homeGui.onmousewheel();
 		}
 
 		function setTools(btn){
