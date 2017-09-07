@@ -1,1 +1,5 @@
+# create your bat with
+#
+# @echo off
+# start "" "C:\Users\<user name>\scoop\persist\nodejs\bin\node_modules\electron\dist\electron.exe" "<repo clone folder path>"
 paintless.bat
