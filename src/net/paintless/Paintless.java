@@ -23,6 +23,7 @@ public class Paintless{
 //		System.setProperty("sun.java2d.opengl", "true");
 //		System.setProperty("sun.java2d.noddraw", "true");
 //		System.setProperty("awt.useSystemAAFontSettings", "on");
+		System.setProperty("prism.lcdtext", "true");
 		INSTANCE.start();
 	}
 	

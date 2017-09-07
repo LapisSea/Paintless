@@ -1,4 +1,9 @@
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+
+*{
+    -fx-font-smoothing-type: lcd;
+}
+
 .btn{
 	-fx-background-color: inherit;
 	-fx-background-radius: 0.0px;
@@ -93,3 +98,8 @@
 	-fx-border-color:derive(gray,80.0%);	
 	-fx-padding:10.0px;
 }
+
+.gui .bar *{
+	-fx-min-height: 0px;
+}
+
