@@ -25,7 +25,8 @@ function createWin(){
 		minWidth: 300,
 		frame: false,
 		show: false,
-		icon: path.join(__dirname, 'assets/PaintlessIco64.png')
+		icon: path.join(__dirname, 'assets/PaintlessIco64.png'),
+		webPreferences: {'experimentalFeatures': true}
 	});
 	mainWindow.on('ready-to-show', ()=>{
 		winState.manage(mainWindow);

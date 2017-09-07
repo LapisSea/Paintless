@@ -41,7 +41,29 @@
 		homeGui.editor=homeGui.querySelector("#Editor");
 		homeGui.scal=500;
 		homeGui.actualScale=1;
+		homeGui.force=1;
 		homeGui.editor.mouseDown=false;
+
+		// var Pressure = require('pressure');
+		// Pressure.config({
+		// 	polyfill: false,
+		// 	polyfillSpeedUp: 0,
+		// 	polyfillSpeedDown: 0,
+		// 	preventSelect: true,
+		// 	only: null
+		// });
+// 
+		// Pressure.set(homeGui,{
+		// 	change: function(force, event){
+		// 		homeGui.force=force;
+		// 		console.log(force)
+		// 	},
+		// 	unsupported: function(){
+		// 		console.log("Oh no, this device does not support pressure.")
+		// 	}
+
+		// });
+		// homeGui.onpointerlockchange=()=>console.log("asd")
 		var lastToolX;
 		var lastToolY;
 		
@@ -50,7 +72,7 @@
 			var distX=x-lastToolX;
 			var distY=y-lastToolY;
 			// var dist=Math.sqrt(distX*distX+distY*distY);
-			var brushSize=20;
+			var brushSize=20*homeGui.force;
 			var angle=Math.atan2(-distX,distY);
 
 			ctx.strokeStyle="black";
@@ -80,6 +102,10 @@
 		homeGui.onmouseup=function(e){
 			this.mouseDown=false;
 		}
+		homeGui.pointerdown=function(e){
+			console.log(e)
+		}
+		
 		homeGui.onmousemove=function({clientX,clientY}){
 			if(this.mouseDown){
 				var rect=homeGui.editor.getBoundingClientRect()
