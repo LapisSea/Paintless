@@ -1,0 +1,329 @@
+<div id="FileGui" class="gui" onkeydown="if(window.ctrl&&String.fromCharCode(window.event.keyCode).toLowerCase()==='v')fromClipboard.create()" tabindex=0>
+	<style>
+		#FileGui{
+			color: black;
+			transition: opacity 0.1s;
+			opacity: 0;
+			pointer-events: none;
+			background: white;
+			display: none;
+			outline: 0;
+		}
+		#FileGui[shown]{
+			opacity: 1;
+			pointer-events: all;
+		}
+		#FileGui .Content{
+			background: transparent;
+			width: 100%;
+			overflow: auto;
+		}
+		#FileGui .Content, #FileGui .SideBar{
+			transition: transform 0.3s;
+			transform: translateY(150px) cubic-bezier(0, 1, 0.57, 1);
+		}
+		#FileGui[shown] .Content, #FileGui[shown] .SideBar{
+			transform: none;
+		}
+		#FileBack{
+			height: 40px;
+			padding: 5px 20px;
+			color: white;
+			background: inherit;
+			/* border: 0 solid #4F9BD6;
+			border-width: 0 1px 1px 0; */
+			cursor: pointer;
+		}
+		#FileBack:hover{
+			background-color: #4F9BD6;
+			transition: background-color 0.05s;
+		}
+		#FileGui .SideBar{
+			background: #1883D7;
+			min-width: 150px;
+			width: 150px;
+			box-shadow: 0 -150px 0 #1883D7;
+			box-sizing: border-box;
+			transition: box-shadow 0.22s cubic-bezier(0, 1, 0.57, 1);
+		}
+		#FileGui .SideBar *{
+			width: 100%;
+			font-size: 0.92em;
+			transition: background 0.2s;
+		}
+		#FileGui .SideBar *[active]{
+			background: #0064B8;
+			pointer-events: none;
+		}
+		#FileGui[shown] .SideBar{
+			box-shadow: 0 0px 0 #1883D7;
+		}
+		#FileGui .Section{
+			/* border-top: 1px solid #F0F0F0; */
+			transition: transform 0.2s, opacity 0.2s;
+			margin-left: 50px;
+			top: 0;
+			float: left;
+			margin-right: -100%;
+			width: calc(100% - 50px);
+			min-height: 100%;
+			display: flex;
+			align-items: stretch;
+		}
+		#FileGui .Section:not([active]){
+			opacity: 0;
+			pointer-events: none;
+			transform: translateX(-50px);
+			overflow: hidden;
+			max-width: 100%;
+			max-height: 100%;
+		}
+		#FileGui .Section .Title{
+			font-size: 2em;
+			text-align: left;
+			font-weight: 100;
+		}
+		#FromSize .AspRatio{
+			height:36px;
+			width:36px;
+			padding:3px;
+			cursor: pointer;
+		}
+		#FromSize .AspRatio div{
+			height:30px;
+			width:30px;
+			transition: background-image 0.5s;
+			background-repeat:no-repeat;
+			background-size: 30px;
+			filter:brightness(0.5);
+			background-position: center;
+		}
+		#FileGui .lr{
+			display: flex;
+			min-height: 100%;
+			align-items: stretch;
+			flex-grow: 1;
+			transition: margin-top 0.2s;
+		}
+		body.FullScreen #FileGui .lr{
+			margin-top: 30px;
+			transition: margin-top 0.2s 0.1s;
+		}
+		#FileGui h3{
+			font-weight: 100;
+		}
+		#FileGui .Part{
+			padding-top: 20px;
+		}
+		#FileGui .Section .BigBtn{
+			border: 1px solid #AAAAAA;
+			margin: 5px 15px 0 15px;
+			padding: 10px 20px;
+		}
+		#NewImgPreview{
+			image-rendering: auto;
+			height: auto;
+		}
+	</style>
+	<div class="SideBar">
+		<button id="FileBack" onclick="openView(lastView)">Back</button>
+		<div style="margin: 5px 0;height:1px;background: #4F9BD6"></div>
+		<button id="FileBack" onclick="fileGui.goto(0)">Create </button>
+		<button id="FileBack" onclick="fileGui.goto(1)">Open   </button>
+		<button id="FileBack" onclick="fileGui.goto(2)">Load   </button>
+		<button id="FileBack" onclick="fileGui.goto(3)">Recover</button>
+		
+	</div>
+	<div class="Content">
+		<div class="Section">
+			<div class="lr">
+				<div style="
+					flex-grow: 0;
+					flex-shrink: 0;
+					margin-right:10px;">
+					<div class="Title">Create</div>
+
+					<div id="FromSize" class="Part">
+						<h3>From size:</h3>
+						<div style="
+						align-items: flex-end;
+						display: flex;
+						flex-wrap: wrap;">
+							<div class="NamedInput">
+								Width<br>
+								<input id="NewCreateWidth" type="number" min="0" step="1" pattern="\d+\.?\d*" value="600" onchange="fromSize.update()"/>
+							</div>
+							<div style="padding-bottom: 2px">
+								<button class="AspRatio" onclick="fromSize.aspectRatioToggle(this)">
+									<div></div>
+								</button>
+							</div>
+							<div class="NamedInput">
+								Height<br>
+								<input id="NewCreateHeight" type="number" min="0" step="1" pattern="\d+\.?\d*" value="400" onchange="fromSize.update()"/>
+							</div>
+						</div>
+						<div style="text-align: right;">
+							<button class="BigBtn" onclick="fromSize.update();fileGui.create()">Create</button>
+						</div>
+						
+					</div>
+					<div id="FromClipboard" class="Part">
+						<h3>From clipboard:</h3>
+						<div style="text-align: center;">
+							<div id="NewPasteInfo"></div>
+							<button class="BigBtn" onclick="fromClipboard.load()">Preview</button>
+							<button onclick="fromClipboard.create()" class="BigBtn">Create</button>
+						</div>
+					</div>
+
+					<div id="FromScript" class="Part">
+						<h3>From script:</h3>
+					</div>
+					
+				</div>
+				<div style="
+					border-left: 1px solid #F4F4F4;
+					display:flex;
+					align-items: center;
+					justify-content: center;
+					flex-grow: 1;">
+					<div style="max-width:100%;max-height:100%;" class="ImageView">
+						<canvas id="NewImgPreview" width=600 height=400 style="max-width:100%;max-height:100%;"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="Section">
+			<div class="Title">Open</div>
+			Open from file:
+		</div>
+		<div class="Section">
+			<div class="Title">Load</div>
+			Open from file:
+		</div>
+		<div class="Section">
+			<div class="Title">Recover</div>
+			Open from file:
+		</div>
+	</div>
+	<script>
+		let newImgPreview=document.getElementById("NewImgPreview");
+		newImgPreview.setSize=(w,h)=>{
+			var c=newImgPreview;
+			c.width=w;
+			c.height=h;
+			fileGui.updatePreview();
+		}
+		fromSize={
+			newCreateWidth:document.getElementById("NewCreateWidth"),
+			newCreateHeight:document.getElementById("NewCreateHeight"),
+			aspectRatio:true,
+			aspectRatioToggle:function(btn){
+				this.aspectRatioSet(btn,!this.aspectRatio);
+			},
+			aspectRatioSet:function(btn,flag){
+				this.aspectRatio=flag;
+				btn.children[0].style.backgroundImage="url('"+(this.aspectRatio?"assets/Chain.png":"assets/Chainless.png")+"')";
+			},
+			update:function(){
+				newImgPreview.setSize(Math.round(this.newCreateWidth.value),Math.round(this.newCreateHeight.value));
+				var c=newImgPreview.getContext("2d");
+				c.clearRect(0,0,c.width,c.height);
+			}
+		};
+		fromClipboard={
+			newPasteInfo:document.getElementById("NewPasteInfo"),
+			loaded:false,
+			getImg:function(callback){
+				var img=clipboard.readImage();
+				if(img.isEmpty()){
+					this.newPasteInfo.innerHTML="There is no image in clipboard!";
+					return;
+				}
+				var i=new Image();
+				i.onload=()=>callback(i);
+				i.src=img.toDataURL();
+			},
+			load:function(){
+				this.getImg(i=>{
+					this.newPasteInfo.innerHTML="Image Info: Width: "+i.width+", Height: "+i.height;
+					newImgPreview.setSize(i.width,i.height);
+					fromClipboard.loaded=true;
+					newImgPreview.getContext("2d").drawImage(i,0,0)
+				});
+			},
+			create:function(){
+				if(!this.loaded)this.getImg(i=>fileGui.create(i));
+				else fileGui.create();
+			}
+		};
+		fromSize.aspectRatioSet(document.querySelector("#FromSize .AspRatio"),true);
+		
+
+		fileGui=document.currentScript.parentNode;
+		fileGui.removeChild(document.currentScript);
+		content.appendChild(fileGui);
+
+		fileGui.sideBar=fileGui.querySelector(".SideBar");
+		fileGui.content=fileGui.querySelector(".Content");
+
+		fileGui.updatePreview=function(){
+			var lr=fileGui.content.querySelector(".Section[active] .lr"),
+				left=lr.children[0],
+				right=lr.children[1],
+				contain=right.children[0];
+
+			var h=()=>{
+				var aspect=newImgPreview.height/newImgPreview.width;
+				
+				return Math.min(Math.floor(right.clientWidth*aspect), left.clientHeight-15);
+			}
+			contain.style.maxHeight=h()+"px";
+
+			if(contain.style.maxHeight!=h()+"px")setTimeout(fileGui.updatePreview,0);
+		}
+		window.addEventListener("resize", e=>fileGui.updatePreview());
+
+		
+		fileGui.create=function(img){
+			homeGui.setImage(img?img:newImgPreview);
+			openView(lastView);
+			fromClipboard.loaded=false;
+			fromSize.update();
+		}
+
+		loadingView.onOpen=function(){
+			fileGui.style.display="flex";
+			viewBtns.hide();
+			backgroundFlush(true);
+			requestAnimationFrame(()=>{
+				fileGui.setAttribute("shown","");
+				fileGui.updatePreview();
+				fileGui.focus();
+			});
+		}
+		loadingView.onClose=function(){
+			fileGui.removeAttribute("shown");
+			viewBtns.show();
+			backgroundFlush(false);
+			setTimeout(()=>fileGui.style.display="",200);
+		}
+		fileGui.goto=btn=>{
+			var c=fileGui.content.children;
+			var b=fileGui.sideBar.children;
+			for(var i=0;i<c.length;i++){
+				if(btn===i){
+					c[i  ].setAttribute("active","");
+					b[i+2].setAttribute("active","");
+				}else{
+					c[i  ].removeAttribute("active");
+					b[i+2].removeAttribute("active");
+				}
+			}
+			fileGui.updatePreview();
+		}
+		fileGui.goto(0);
+	</script>
+	
+</div>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Paintless</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="Style.css">
+	</head>
+	<body onresize="if(resize)resize()">
+		<script src="essentials.js"></script>
+		<div hidden id="Loader" style="display: none;"></div>
+		<div class="bar" id="WinTitlebar">
+			<div class="Title">
+				<div class="Content">
+					<img src="assets/PaintlessIco64.png" style="height:20px;padding-right: 5px;"> 
+					Paintless <span id="TitleFileName"></span>
+
+					<link rel="import" href="LoadingSvg.html" LoadingSvg>
+					<script>
+						!function(){
+							var script=document.currentScript,src=document.querySelector("link[LoadingSvg]");
+							script.parentElement.appendChild(winLoadingSvg=src.import.body.children[0]);
+							script.remove();
+							src.remove();
+						}();
+						winLoadingSvg.loadCount=1;
+						winLoadingSvg.show=function(){
+							this.loadCount++;
+							this.removeAttribute("deactivated");
+						}
+						winLoadingSvg.hide=function(){
+							if(--this.loadCount==0){
+								this.setAttribute("deactivated","");
+								this.loadCount=0;
+							}
+						}
+						winLoadingSvg.hide();
+					</script>
+				</div>
+			</div>
+			<div class="Buttons">
+				<button class="Ico"    onclick="iconify()"></button>
+				<button class="MinMax" onclick="toggleMaximize()"></button>
+				<button class="Close"  onclick="exit()"></button>
+			</div>
+		</div>
+		<div class="bar" id="Views">
+			<button onclick="openView(this)">File</button>
+			<button onclick="openView(this)">Home</button>
+			<button onclick="openView(this)">Effects</button>
+			<button onclick="openView(this)">Image</button>
+		</div>
+		<div id="Content"></div>
+		<script src="ContentMain.js"></script>
+	</body>
+</html>

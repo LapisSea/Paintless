@@ -1,0 +1,195 @@
+body, html{
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	margin: 0;
+}
+body{
+	font: caption;
+	border: 1px solid #AAAAAA;
+	box-sizing: border-box;
+	box-shadow: 0 0 10px rgba(0,0,0,0.3);
+	transition: border-color 0.3s;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+input{
+	outline: 0;
+	padding: 0.4em;
+	font-size: 1em;
+	background: #F4F4F4;
+	border: 1px solid #AAAAAA;
+}
+canvas{
+	margin: 0;
+	padding: 0;
+	border: none;
+	outline: 0;
+}
+
+.NamedInput{
+	display: inline-block;
+	padding: 0.2em;
+}
+
+body.Focused{
+	border-color: #1883D7;
+}
+body.Maximized, body.FullScreen{
+	border: none;
+	transition: none;
+}
+
+.bar{
+	background: #1883D7;
+	color: white;
+	flex-shrink: 0;
+}
+#WinTitlebar{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	font-size: 13px;
+	user-select: none;
+	height: 40px;
+	transition: background 0.3s, height 0.2s;
+}
+body[bgFlush] #WinTitlebar{
+	background: white;
+}
+body.Maximized #WinTitlebar{
+	height: 30px;
+}
+body.FullScreen #WinTitlebar{
+	height: 0px !important;
+	transition: background 0.3s, height 0.2s 0.1s;
+}
+#WinTitlebar .Title{
+	flex-grow: 1;
+	-webkit-app-region: drag;
+	height: 100%;
+}
+#WinTitlebar .Title .Content{
+	padding-left: 10px;
+	height: 100%;
+	display: inline-flex;
+	align-items: center;
+	width: 140px;
+	background: #1883D7;
+}
+
+#WinTitlebar .Buttons{
+	height: 100%;
+	min-width: 120px;
+	transition: filter 0.2s;
+}
+body[bgFlush] #WinTitlebar .Buttons{
+	filter: invert(100%);
+}
+#WinTitlebar .Buttons *{
+	width: 40px;
+	display: inline-block;
+	cursor: default;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+#WinTitlebar .Buttons *:hover{
+	background-color: #4F9BD6;
+}
+body[bgFlush] #WinTitlebar .Buttons *:hover{
+	background-color: #1A1A1A;
+}
+
+.Ico{
+	background-image: url("assets/iconify.png");
+}
+.MinMax{
+	background-image: url("assets/max.png");
+}
+.Maximized .MinMax{
+	background-image: url("assets/unmax.png");
+}
+.Close{
+	background-image: url("assets/x.png");
+}
+button{
+	border: 0;
+	outline: 0;
+	padding: 0;
+	margin: 0;
+	
+	-webkit-appearance: default;
+	color: inherit;
+	transition: background-color 0.15s;
+	height: 100%;
+	user-select: none;
+	background-color: white;
+}
+button:hover{
+	background-color: #E5E5E5;
+	transition: background-color 0.05s;
+}
+
+.bar button{
+	background-color: inherit;
+	float: left;
+}
+.bar button:hover{
+	background-color: #4F9BD6;
+	transition: background-color 0.05s;
+}
+.bar button[active]{
+	background-color: #4F9BD6;
+	transition: background-color 0.05s;
+	pointer-events: none;
+}
+button[disabled]{
+	background-color: #D0D0D0;
+	pointer-events: none;
+}
+.bar button:not([active]){
+	cursor: pointer;
+}
+#Content{
+	flex-grow: 1;
+	height: 100%;
+	/* overflow: hidden; */
+}
+#Content .gui{
+	float:left;
+	margin-bottom: -1000%;
+	width: 100%;
+	height: 100%;
+	position: relative;
+}
+#Views{
+	height: 40px;
+	transition: height 0.2s, background 0.2s, opacity 0.2s;
+	overflow: hidden;
+}
+#Views button{
+	width: 60px;
+}
+.LoadingSvg{
+	height: 100%;
+	box-sizing: border-box;
+	border: 5px solid transparent;
+}
+.LoadingSvg[deactivated]{
+	transition: opacity 0.4s;
+	opacity: 0;
+}
+
+.ImageView{
+	border: 1px solid #AAAAAA;
+	box-sizing: border-box;
+	background-image: url(assets/tile.png);
+	background-size: 16px;
+	image-rendering: pixelated;
+	box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+	display: flex;
+}
+
+
+

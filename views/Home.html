@@ -1,0 +1,117 @@
+<div id="HomeGui" class="gui">
+	<style>
+		#HomeGui{
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			background: #F0F0F0;
+			overflow: auto;
+			/* position: absolute; */
+		}
+		#Editor{
+			transition: width 0.1s, height 0.1s, min-width 0.1s, min-height 0.1s;
+			background-attachment: scroll;
+		}
+	</style>
+	<div style="padding: 5%">
+		<div class="ImageView">
+			<canvas width=600 height=400 id="Editor" onkeydown="console.log(window.event)"></canvas>
+		</div>
+	</div>
+	<script>
+		homeGui=document.currentScript.parentNode;
+		homeGui.removeChild(document.currentScript);
+		content.appendChild(homeGui);
+
+		homeGui.editor=homeGui.querySelector("#Editor");
+		homeGui.scal=500;
+		homeGui.actualScale=1;
+		homeGui.editor.mouseDown=false;
+		var lastToolX;
+		var lastToolY;
+		
+		var tool=(x,y)=>{
+			ctx=homeGui.editor.getContext("2d");
+			var distX=x-lastToolX;
+			var distY=y-lastToolY;
+			var dist=Math.sqrt(distX*distX+distY*distY);
+			console.log(dist)
+			var brushSize=3;
+
+			ctx.strokeStyle="black";
+			ctx.fillStyle="black";
+
+			ctx.beginPath();
+			ctx.moveTo(lastToolX, lastToolY);
+			ctx.lineTo(x, y);
+			ctx.lineWidth = brushSize;
+			ctx.stroke();
+			ctx.closePath();
+			
+			ctx.beginPath();
+			ctx.arc(x,y,brushSize/2,0,2*Math.PI);
+			ctx.arc(lastToolX,lastToolY,brushSize/2,0,2*Math.PI);
+			ctx.fill();
+		};
+
+
+		homeGui.onmousedown=function({clientX,clientY}){
+			this.mouseDown=true;
+			var rect=homeGui.editor.getBoundingClientRect();
+			lastToolX=(clientX-rect.left)/this.actualScale;
+			lastToolY=(clientY-rect.top)/this.actualScale;
+			tool(lastToolX,lastToolY);
+			// console.log(e)
+		}
+		homeGui.onmouseup=function(e){
+			this.mouseDown=false;
+		}
+		homeGui.onmousemove=function({clientX,clientY}){
+			if(this.mouseDown){
+				var rect=homeGui.editor.getBoundingClientRect()
+					x=(clientX-rect.left)/this.actualScale,
+					y=(clientY-rect.top)/this.actualScale;
+				tool(x,y);
+				lastToolX=x;
+				lastToolY=y;
+			}
+		}
+		
+		homeGui.onmousewheel=function(ev){
+			if(!window.ctrl)return;
+			if(ev){
+				this.scal-=ev.deltaY;
+				if(this.scal<0)this.scal=0;
+			}
+
+			var scale=Math.max(this.scal/500,0.05);
+			scale=(scale+Math.pow(scale,2))/2;
+			this.actualScale=scale;
+			var e=this.editor,s=e.style;
+
+			var prev=e.scrollWidth<homeGui.clientWidth;
+
+			s.width=s.minWidth=e.width*scale+"px";
+			s.height=s.minHeight=e.height*scale+"px";
+
+			s.imageRendering=scale<1?"auto":"";
+		};
+		homeGui.setImage=function(image){
+			var e=homeGui.editor;
+			e.width=image.width;
+			e.height=image.height;
+			e.getContext("2d").drawImage(image,0,0);
+			this.onmousewheel();
+		}
+
+		function setTools(btn){
+			
+		}
+
+		loadingView.onOpen=function(){
+		};
+		loadingView.onClose=function(){
+		};
+	</script>
+	
+</div>
