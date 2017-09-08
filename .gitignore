@@ -2,4 +2,5 @@
 #
 # @echo off
 # start "" "C:\Users\<user name>\scoop\persist\nodejs\bin\node_modules\electron\dist\electron.exe" "<repo clone folder path>"
+# add -dev at end to used F5 and F6 for reaload and dev tools
 paintless.bat

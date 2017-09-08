@@ -8,9 +8,9 @@ const
 		BrowserWindow,
 		app,
 		globalShortcut,
-		clipboard
-	}
-	=require('electron');
+		clipboard,
+		webFrame
+	}=require('electron');
 
 let mainWindow;
 
@@ -36,8 +36,10 @@ function createWin(){
 	winState.manage(mainWindow);
 	mainWindow.loadURL(url.format({pathname: path.join(__dirname, 'index.html'),protocol: 'file:',slashes: true}));
 	mainWindow.on('closed', ()=>mainWindow = null);
-	globalShortcut.register('F5',()=>mainWindow.reload());
-	globalShortcut.register('F6',()=>mainWindow.webContents.toggleDevTools());
+	if(process.argv.indexOf("-dev")!==-1){
+		globalShortcut.register('F5',()=>mainWindow.reload());
+		globalShortcut.register('F6',()=>mainWindow.webContents.toggleDevTools());
+	}
 }
 
 

@@ -1,5 +1,11 @@
 Brush={
-
+	canvas:(()=>{
+		var c=document.createElement("canvas");
+		c.width=c.height=0;
+		c.className="SoftHide";
+		document.appendChild(c);
+		return c;
+	})(),
 	run:function(ctx,x,y,prevX,prevY){
 		var color;
 		if(mouseBtns.left)color="black";

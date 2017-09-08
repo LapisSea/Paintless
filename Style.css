@@ -192,6 +192,14 @@ button[disabled]{
 	box-shadow: 0 2px 15px rgba(0,0,0,0.1);
 	display: flex;
 }
-
+.SoftHide{
+	position: fixed !important;
+	width: 1px !important;
+	height: 1px !important;
+	max-width: 1px !important;
+	max-height: 1px !important;
+	opacity: 0 !important;
+	bottom: 0px !important;
+}
 
 

@@ -4,7 +4,8 @@
 const 
 {
 	remote,
-	clipboard
+	clipboard,
+	webFrame
 }=require('electron'),
 fs = require('fs'),
 path=require('path');

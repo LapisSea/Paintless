@@ -2,7 +2,6 @@
 	<style>
 		#HomeGui{
 			background: #F0F0F0;
-			overflow: auto;
 			vertical-align: middle;
 			display: flex;
 			/* flex-direction: column; */
@@ -26,20 +25,66 @@
 			display: flex;
 			justify-content: center;
 			flex-wrap: wrap;
-			/* background: #4F9BD6; */
+			padding: 10px 0;
+			background: #0064B8;
 		}
 		#EditTools .basic{
 			background-size:30px;
 			background-position:center;
 			background-repeat:no-repeat;
-			height:35px;
-			width:35px;
+			height:40px;
+			width:40px;
 			border-radius:2px;
 			margin: 2px;
 		}
+		#EditTools .basic[active], #EditTools .basic:hover{
+			background-color: #005397;
+		}
+
+		#EditorScrollArea::-webkit-scrollbar-corner{
+			background:#CDCDCD;
+		}
+
+		#EditorScrollArea::-webkit-scrollbar{
+			background: #F0F0F0;
+		}
+		#EditorScrollArea::-webkit-scrollbar:vertical{
+			width:17px;
+			border-left-width: 1px;
+		}
+		#EditorScrollArea::-webkit-scrollbar:horizontal{
+			height: 17px;
+			border-top-width: 1px;
+		}
+
+		#EditorScrollArea::-webkit-scrollbar-button:horizontal{width:17px;}
+		#EditorScrollArea::-webkit-scrollbar-button:horizontal:increment{background: url(assets/ArrowRight.png) no-repeat center, #CDCDCD;}
+		#EditorScrollArea::-webkit-scrollbar-button:horizontal:decrement{background: url(assets/ArrowLeft.png) no-repeat center, #CDCDCD;}
+		#EditorScrollArea::-webkit-scrollbar-button:horizontal:increment:hover{background: url(assets/ArrowRight.png) no-repeat center, #A6A6A6;}
+		#EditorScrollArea::-webkit-scrollbar-button:horizontal:decrement:hover{background: url(assets/ArrowLeft.png) no-repeat center, #A6A6A6;}
+		#EditorScrollArea::-webkit-scrollbar-button:horizontal:increment:active{background: url(assets/ArrowRight.png) no-repeat center, #606060;}
+		#EditorScrollArea::-webkit-scrollbar-button:horizontal:decrement:active{background: url(assets/ArrowLeft.png) no-repeat center, #606060;}
+
+
+		#EditorScrollArea::-webkit-scrollbar-button:vertical{height:17px;}
+		#EditorScrollArea::-webkit-scrollbar-button:vertical:increment{background: url(assets/ArrowDown.png) no-repeat center, #CDCDCD;}
+		#EditorScrollArea::-webkit-scrollbar-button:vertical:decrement{background: url(assets/ArrowUp.png) no-repeat center, #CDCDCD;}
+		#EditorScrollArea::-webkit-scrollbar-button:vertical:increment:hover{background: url(assets/ArrowDown.png) no-repeat center, #A6A6A6;}
+		#EditorScrollArea::-webkit-scrollbar-button:vertical:decrement:hover{background: url(assets/ArrowUp.png) no-repeat center, #A6A6A6;}
+		#EditorScrollArea::-webkit-scrollbar-button:vertical:increment:active{background: url(assets/ArrowDown.png) no-repeat center, #606060;}
+		#EditorScrollArea::-webkit-scrollbar-button:vertical:decrement:active{background: url(assets/ArrowUp.png) no-repeat center, #606060;}
+
+		#EditorScrollArea::-webkit-scrollbar-thumb{
+			image-rendering: pixelated;
+			background: #CDCDCD;
+		}
+		#EditorScrollArea::-webkit-scrollbar-thumb:hover{background:#A6A6A6;}
+		#EditorScrollArea::-webkit-scrollbar-thumb:active{background:#606060;}
 		
 	</style>
-	<div style="display: contents;height: 100%;">
+	<div class="bar" id="EditTools"></div>
+	<div id="EditorScrollArea" style="height: 100%;overflow: auto;flex-grow: 1;">
+	<div style="height: 100%;width: 100%;display: table">
 		<div id="EditorCenter">
 			<div style="
 			vertical-align: middle;
@@ -52,7 +97,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="bar" id="EditTools"></div>
+	</div>
 	<script>
 		homeGui=document.currentScript.parentNode;
 		homeGui.removeChild(document.currentScript);
@@ -78,10 +123,21 @@
 			}
 			homeGui.editTools.appendChild(btn);
 		}
+	</script>
+	<script src="tools/EssentialTools.js"></script>
+	<script>
 
 		// homeGui.addEventListener('pointermove',e=>{
 		// 	console.log(e.pointerType,e)
 		// });
+
+		function createOffscreenCanvas(){
+			var c=document.createElement("canvas");
+			c.width=c.height=0;
+			c.className="SoftHide";
+			document.appendChild(c);
+			return c;
+		}
 
 		var lastToolX;
 		var lastToolY;
@@ -140,6 +196,10 @@
 
 			s.imageRendering=scale<1?"auto":"";
 		};
+		homeGui.updateScroll=()=>{
+
+		};
+
 		homeGui.setImage=function(image){
 			var e=homeGui.editor;
 			e.width=image.width;
@@ -154,5 +214,4 @@
 		loadingView.onClose=function(){
 		};
 	</script>
-	<script src="tools/EssentialTools.js"></script>
 </div>
