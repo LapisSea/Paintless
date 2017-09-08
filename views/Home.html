@@ -5,11 +5,13 @@
 			overflow: auto;
 			vertical-align: middle;
 			display: flex;
-			/* position: absolute; */
+			/* flex-direction: column; */
+			align-items: stretch;
 		}
 		#Editor{
 			transition: width 0.1s, height 0.1s, min-width 0.1s, min-height 0.1s;
 			background-attachment: scroll;
+			cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAARAgMAAABGA69pAAAADFBMVEX///9HcEz///8AAACdIYivAAAAAnRSTlOYAM8LzSoAAAArSURBVHheYwgNaQ11YAgNe4qdhMiGigJJrZaWVQwM+x89+t8AYUPEiTEBAOevIpexCAVKAAAAAElFTkSuQmCC) 8 8, auto;/* mlg hit marker */
 		}
 		#EditorCenter{
 			/* padding: 5%; */
@@ -19,20 +21,38 @@
 			margin: auto;
 			user-select: none;
 		}
+		#EditTools{
+			width: 100px;
+			display: flex;
+			justify-content: center;
+			flex-wrap: wrap;
+			/* background: #4F9BD6; */
+		}
+		#EditTools .basic{
+			background-size:30px;
+			background-position:center;
+			background-repeat:no-repeat;
+			height:35px;
+			width:35px;
+			border-radius:2px;
+			margin: 2px;
+		}
+		
 	</style>
-	<div style="display: table;width: 100%;height: 100%;">
-			<div id="EditorCenter">
-				<div style="
-				vertical-align: middle;
-				display: inline-block;
-				text-align: left;
-				padding: 5%;">
+	<div style="display: contents;height: 100%;">
+		<div id="EditorCenter">
+			<div style="
+			vertical-align: middle;
+			display: inline-block;
+			text-align: left;
+			padding: 5%;">
 				<div class="ImageView">
-					<canvas width=600 height=400 id="Editor" onkeydown="console.log(window.event)"></canvas>
-				</div>
+					<canvas width=600 height=400 id="Editor"></canvas>
 				</div>
 			</div>
+		</div>
 	</div>
+	<div class="bar" id="EditTools"></div>
 	<script>
 		homeGui=document.currentScript.parentNode;
 		homeGui.removeChild(document.currentScript);
@@ -42,79 +62,63 @@
 		homeGui.scal=500;
 		homeGui.actualScale=1;
 		homeGui.force=1;
-		homeGui.editor.mouseDown=false;
+		
+		homeGui.editTools=homeGui.querySelector("#EditTools");
+		homeGui.activeTool=null;
 
-		// var Pressure = require('pressure');
-		// Pressure.config({
-		// 	polyfill: false,
-		// 	polyfillSpeedUp: 0,
-		// 	polyfillSpeedDown: 0,
-		// 	preventSelect: true,
-		// 	only: null
-		// });
-// 
-		// Pressure.set(homeGui,{
-		// 	change: function(force, event){
-		// 		homeGui.force=force;
-		// 		console.log(force)
-		// 	},
-		// 	unsupported: function(){
-		// 		console.log("Oh no, this device does not support pressure.")
-		// 	}
+		homeGui.setTool=function(toolBtn){
+			if(homeGui.activeTool)homeGui.activeTool.removeAttribute("active");
+			homeGui.activeTool=toolBtn;
+			toolBtn.setAttribute("active","");
+		}
+		homeGui.addTool=function(btn,tool){
+			if(tool){
+				btn.tool=tool;
+				btn.onclick=()=>homeGui.setTool(btn);
+			}
+			homeGui.editTools.appendChild(btn);
+		}
 
+		// homeGui.addEventListener('pointermove',e=>{
+		// 	console.log(e.pointerType,e)
 		// });
-		// homeGui.onpointerlockchange=()=>console.log("asd")
+
 		var lastToolX;
 		var lastToolY;
 		
-		var tool=(x,y)=>{
-			ctx=homeGui.editor.getContext("2d");
-			var distX=x-lastToolX;
-			var distY=y-lastToolY;
-			// var dist=Math.sqrt(distX*distX+distY*distY);
-			var brushSize=20*homeGui.force;
-			var angle=Math.atan2(-distX,distY);
+		var mouseBtns={right:false,left:false,middle:false};
 
-			ctx.strokeStyle="black";
-			ctx.fillStyle="black";
-
-			// ctx.beginPath();
-			// ctx.moveTo(lastToolX, lastToolY);
-			// ctx.lineTo(x, y);
-			// ctx.lineWidth = brushSize;
-			// ctx.stroke();
-			// ctx.closePath();
-			
-			ctx.beginPath();
-			ctx.arc(x,y,brushSize/2,angle,Math.PI+angle);
-			ctx.arc(lastToolX,lastToolY,brushSize/2,Math.PI+angle,angle);
-			ctx.fill();
-		};
-
-
-		homeGui.onmousedown=function({clientX,clientY}){
-			this.mouseDown=true;
+		window.onmousedown=function({clientX,clientY,button}){
+			switch(button){
+				case 0:mouseBtns.left=true;break;
+				case 1:mouseBtns.middle=true;break;
+				case 2:mouseBtns.right=true;break;
+			}
 			var rect=homeGui.editor.getBoundingClientRect();
 			lastToolX=(clientX-rect.left)/this.actualScale;
 			lastToolY=(clientY-rect.top)/this.actualScale;
-			tool(lastToolX,lastToolY);
+			homeGui.activeTool.tool.run(homeGui.editor.getContext("2d"), lastToolX,lastToolY, lastToolX,lastToolY);
 		}
-		homeGui.onmouseup=function(e){
-			this.mouseDown=false;
+		window.onmouseup=function({button}){
+			switch(button){
+				case 0:mouseBtns.left=false;break;
+				case 1:mouseBtns.middle=false;break;
+				case 2:mouseBtns.right=false;break;
+			}
 		}
-		homeGui.pointerdown=function(e){
-			console.log(e)
+		window.onmouseleave=function(){
+			mouseBtns.left=false;
+			mouseBtns.middle=false;
+			mouseBtns.right=false;
 		}
 		
-		homeGui.onmousemove=function({clientX,clientY}){
-			if(this.mouseDown){
-				var rect=homeGui.editor.getBoundingClientRect()
-					x=(clientX-rect.left)/this.actualScale,
-					y=(clientY-rect.top)/this.actualScale;
-				tool(x,y);
-				lastToolX=x;
-				lastToolY=y;
-			}
+		homeGui.onmousemove=function({clientX,clientY,button}){
+			var rect=homeGui.editor.getBoundingClientRect()
+				x=(clientX-rect.left)/this.actualScale,
+				y=(clientY-rect.top)/this.actualScale;
+			homeGui.activeTool.tool.run(homeGui.editor.getContext("2d"), x,y, lastToolX,lastToolY);
+			lastToolX=x;
+			lastToolY=y;
 		}
 		
 		homeGui.onmousewheel=function(ev){
@@ -145,14 +149,10 @@
 			homeGui.onmousewheel();
 		}
 
-		function setTools(btn){
-			
-		}
-
 		loadingView.onOpen=function(){
 		};
 		loadingView.onClose=function(){
 		};
 	</script>
-	
+	<script src="tools/EssentialTools.js"></script>
 </div>

@@ -29,11 +29,11 @@ function createWin(){
 		webPreferences: {'experimentalFeatures': true}
 	});
 	mainWindow.on('ready-to-show', ()=>{
-		winState.manage(mainWindow);
 		mainWindow.show();
 		mainWindow.focus();
 	});
-
+	
+	winState.manage(mainWindow);
 	mainWindow.loadURL(url.format({pathname: path.join(__dirname, 'index.html'),protocol: 'file:',slashes: true}));
 	mainWindow.on('closed', ()=>mainWindow = null);
 	globalShortcut.register('F5',()=>mainWindow.reload());

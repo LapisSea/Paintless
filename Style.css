@@ -3,6 +3,7 @@ body, html{
 	height: 100%;
 	padding: 0;
 	margin: 0;
+	user-select: none;
 }
 body{
 	font: caption;
@@ -20,6 +21,7 @@ input{
 	font-size: 1em;
 	background: #F4F4F4;
 	border: 1px solid #AAAAAA;
+	user-select: all;
 }
 canvas{
 	margin: 0;
