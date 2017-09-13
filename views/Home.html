@@ -109,7 +109,7 @@
 		homeGui.force=1;
 		
 		homeGui.editTools=homeGui.querySelector("#EditTools");
-		homeGui.activeTool=null;
+		homeGui.activeTool=undefined;
 
 		homeGui.setTool=function(toolBtn){
 			if(homeGui.activeTool)homeGui.activeTool.removeAttribute("active");
@@ -123,6 +123,14 @@
 			}
 			homeGui.editTools.appendChild(btn);
 		}
+
+		function createOffscreenCanvas(){
+			var c=document.createElement("canvas");
+			c.width=c.height=0;
+			c.className="SoftHide";
+			document.body.appendChild(c);
+			return c;
+		}
 	</script>
 	<script src="tools/EssentialTools.js"></script>
 	<script>
@@ -131,16 +139,8 @@
 		// 	console.log(e.pointerType,e)
 		// });
 
-		function createOffscreenCanvas(){
-			var c=document.createElement("canvas");
-			c.width=c.height=0;
-			c.className="SoftHide";
-			document.appendChild(c);
-			return c;
-		}
-
-		var lastToolX;
-		var lastToolY;
+		var lastToolX=0;
+		var lastToolY=0;
 		
 		var mouseBtns={right:false,left:false,middle:false};
 
@@ -150,10 +150,12 @@
 				case 1:mouseBtns.middle=true;break;
 				case 2:mouseBtns.right=true;break;
 			}
-			var rect=homeGui.editor.getBoundingClientRect();
-			lastToolX=(clientX-rect.left)/this.actualScale;
-			lastToolY=(clientY-rect.top)/this.actualScale;
-			homeGui.activeTool.tool.run(homeGui.editor.getContext("2d"), lastToolX,lastToolY, lastToolX,lastToolY);
+			var rect=homeGui.editor.getBoundingClientRect()
+				x=(clientX-rect.left)/this.actualScale,
+				y=(clientY-rect.top)/this.actualScale;
+			lastToolX=x;
+			lastToolY=y;
+			if(homeGui.activeTool)homeGui.activeTool.tool.run(homeGui.editor.getContext("2d"), x,y, x,y);
 		}
 		window.onmouseup=function({button}){
 			switch(button){
@@ -172,7 +174,7 @@
 			var rect=homeGui.editor.getBoundingClientRect()
 				x=(clientX-rect.left)/this.actualScale,
 				y=(clientY-rect.top)/this.actualScale;
-			homeGui.activeTool.tool.run(homeGui.editor.getContext("2d"), x,y, lastToolX,lastToolY);
+			if(homeGui.activeTool)homeGui.activeTool.tool.run(homeGui.editor.getContext("2d"), x,y, lastToolX,lastToolY);
 			lastToolX=x;
 			lastToolY=y;
 		}
