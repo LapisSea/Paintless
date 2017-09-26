@@ -1,5 +1,19 @@
 {
   "name": "electron-paintless",
-  "version": "0.01",
-  "main": "main.js"
+  "version": "0.0.5",
+  "description": "Paintless",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LapisSea/Paintless.git"
+  },
+  "author": "LapisSea",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LapisSea/Paintless/issues"
+  },
+  "homepage": "https://github.com/LapisSea/Paintless#readme"
 }
